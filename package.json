@@ -10,6 +10,7 @@
   "author": "Fortunatus",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.14.2",
