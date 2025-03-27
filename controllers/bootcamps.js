@@ -1,21 +1,62 @@
 const Bootcamp = require("../models/BootCamp");
+const mongoose = require("mongoose");
 
 //@desc  Get all bootcamps
 //@route  GET /api/v1/bootcamps
 //@access  Public
 
-exports.getBootcamps = (req, res, next) => {
-  res.status(200).json({ success: true, msg: "Show all bootcamps" });
+exports.getBootcamps = async(req, res, next) => {
+  try {
+    const bootcamps = await Bootcamp.find();
+    res.status(200).json({
+      success: true,
+      count: bootcamps.length,
+    data: bootcamps    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message || "Server Error"
+    })
+  }
+  
 };
 
 //@desc  Get single bootcamp
 //@route  GET /api/v1/bootcamps/:id
 //@access  Public
 
-exports.getBootcamp = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Get a bootcamp ${req.params.id}` });
+exports.getBootcamp = async(req, res, next) => {
+  try {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Bootcamp ID format"
+      })
+    }
+
+    const bootcamp = await Bootcamp.findById(req.params.id)
+    if(!bootcamp) {
+      return res.status(404).json({
+        success: false,
+        error: "Bootcamp not found"
+      })
+    }
+    res.status(200).json({
+      success: true,
+      data: bootcamp
+    })
+  } catch (error) {
+    if(error.name === "CastErrot"){
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Bootcamp ID format"
+      })
+    }
+    res.status(500).json({
+      success: false,
+      error: error.message || "Server Error"
+    })
+  }
 };
 
 //@desc  add a bootcamp
