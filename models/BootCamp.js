@@ -68,8 +68,7 @@ const BootcampSchema = new mongoose.Schema({
     //Array of strings
     type: [String],
     required: true,
-    enum: ["Web Developer", "UI/UX","Mobile Developer", "Data Science","Machine Learning","Business", "Others"]
-  },
+    enum: ["Web Development", "Web Developer", "UI/UX", "Mobile Developer", "Data Science", "Machine Learning", "Business", "Others"]  },
   averageRating: {
     type: Number,
     min: [1, "Rating must be at least 1"],
