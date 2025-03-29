@@ -138,3 +138,39 @@ exports.updateBootcamp = async(req, res, next) => {
 //@route  DELETE /api/v1/bootcamps/:id
 //@access  Private
 
+exports.deleteBootcamp = async (req, res, next) => {
+  try {
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Bootcamp ID format"
+      })
+    }
+
+    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id, req.body, { 
+      new: true,   // Return the updated document
+      runValidators: true, // Validate update against schema
+    })
+    if(!bootcamp) {
+      return res.status(404).json({
+        success: false,
+        error: "Bootcamp not found"
+      })
+    }
+    res.status(200).json({
+      success: true,
+      data: bootcamp
+    })
+  } catch (error) {
+    if(error.name === "CastErrot"){
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Bootcamp ID format"
+      })
+    }
+    res.status(500).json({
+      success: false,
+      error: error.message || "Server Error"
+    })
+  }
+};
